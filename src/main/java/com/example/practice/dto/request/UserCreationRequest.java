@@ -3,7 +3,7 @@ package com.example.practice.dto.request;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.example.practice.Validator.DobConstraint;
+import com.example.practice.validator.DobConstraint;
 
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;

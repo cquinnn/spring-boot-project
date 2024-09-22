@@ -1,4 +1,4 @@
-package com.example.practice.Validator;
+package com.example.practice.validator;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

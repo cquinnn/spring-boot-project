@@ -1,4 +1,4 @@
-package com.example.practice.Validator;
+package com.example.practice.validator;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
