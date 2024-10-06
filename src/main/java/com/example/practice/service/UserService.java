@@ -3,6 +3,7 @@ package com.example.practice.service;
 import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.example.practice.dto.request.UserCreationRequest;
 import com.example.practice.dto.request.UserUpdateRequest;
 import com.example.practice.dto.response.UserResponse;
+import com.example.practice.entity.Role;
 import com.example.practice.entity.User;
 import com.example.practice.exception.AppException;
 import com.example.practice.exception.ErrorCode;
@@ -35,14 +37,21 @@ public class UserService {
 	RoleRepository roleRepo;
 	
 	public UserResponse createUser(UserCreationRequest request) {
-		if (userRepo.existsByUsername(request.getUsername()))
-			throw new AppException(ErrorCode.USER_EXISTED);
+		// if (userRepo.existsByUsername(request.getUsername()))
+		// 	throw new AppException(ErrorCode.USER_EXISTED);
 		
 		User user = userMapper.toUser(request);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		var roles = roleRepo.findAllById(request.getRoles());
+		HashSet<Role> roles= new HashSet<>();
+		request.getRoles().forEach(role -> roleRepo.findById(role).ifPresent(roles::add));
 		user.setRoles(new HashSet<>(roles));
-		return userMapper.toUserResponse(userRepo.save(user));
+		try {
+			user = userRepo.save(user);
+
+		} catch (DataIntegrityViolationException exception){
+			throw new AppException(ErrorCode.USER_EXISTED);
+		}
+		return userMapper.toUserResponse(user);
 	}
 	
 	public UserResponse updateUser(String userId, UserUpdateRequest request) {

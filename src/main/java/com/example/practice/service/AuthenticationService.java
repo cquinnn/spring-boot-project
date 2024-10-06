@@ -98,6 +98,7 @@ public class AuthenticationService {
 		} catch (AppException e) {
 			isValid = false;
 		}
+		System.out.println(isValid);
 		return IntrospectResponse.builder()
 				.valid(isValid)
 				.build();
