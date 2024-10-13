@@ -2,6 +2,7 @@ package com.webapp.identity.service;
 
 import com.webapp.identity.dto.request.RoleRequest;
 import com.webapp.identity.dto.response.RoleResponse;
+import com.webapp.identity.entity.Role;
 import com.webapp.identity.mapper.RoleMapper;
 import com.webapp.identity.repository.PermissionRepository;
 import com.webapp.identity.repository.RoleRepository;
@@ -28,6 +29,17 @@ public class RoleService {
     role.setPermissions(new HashSet<>(permissions));
     roleRepo.save(role);
     return roleMapper.toRoleResponse(role);
+  }
+
+  public RoleResponse updateRole(String role, RoleRequest request) {
+    Role role_update =
+        roleRepo.findByName(role).orElseThrow(() -> new RuntimeException("User not found"));
+
+    roleMapper.updateRole(role_update, request);
+    var permissions = permissionRepo.findAllById(request.getPermissions());
+    role_update.setPermissions(new HashSet<>(permissions));
+
+    return roleMapper.toRoleResponse(roleRepo.save(role_update));
   }
 
   public List<RoleResponse> getAll() {

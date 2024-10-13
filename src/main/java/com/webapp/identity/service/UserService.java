@@ -11,12 +11,13 @@ import com.webapp.identity.mapper.UserMapper;
 import com.webapp.identity.repository.RoleRepository;
 import com.webapp.identity.repository.UserRepository;
 import java.util.HashSet;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,8 +63,10 @@ public class UserService {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  public List<UserResponse> getUsers() {
-    return userRepo.findAll().stream().map(userMapper::toUserResponse).toList();
+  public Page<UserResponse> getUsers(int pageNo, int pageSize) {
+    Page<User> users = userRepo.findAll(PageRequest.of(pageNo, pageSize));
+    Page<UserResponse> usersResponses = users.map(userMapper::toUserResponse);
+    return usersResponses;
   }
 
   @PostAuthorize("returnObject.username == authentication.name")
