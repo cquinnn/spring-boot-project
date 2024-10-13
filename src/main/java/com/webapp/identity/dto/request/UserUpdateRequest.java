@@ -2,7 +2,6 @@ package com.webapp.identity.dto.request;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,9 +15,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-	String password;
-	String firstName;
-	String lastName;
-	LocalDate dob;
-	List<String> roles;
+  String password;
+  String firstName;
+  String lastName;
+  LocalDate dob;
+  List<String> roles;
 }

@@ -1,9 +1,6 @@
 package com.webapp.identity.repository;
 
+import com.webapp.identity.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.webapp.identity.entity.Permission;
-
-public interface PermissionRepository extends JpaRepository<Permission, String> {
-
-}
+public interface PermissionRepository extends JpaRepository<Permission, String> {}

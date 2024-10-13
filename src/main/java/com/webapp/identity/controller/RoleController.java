@@ -1,7 +1,14 @@
 package com.webapp.identity.controller;
 
+import com.webapp.identity.dto.request.ApiResponse;
+import com.webapp.identity.dto.request.RoleRequest;
+import com.webapp.identity.dto.response.RoleResponse;
+import com.webapp.identity.service.RoleService;
 import java.util.List;
-
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,41 +17,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.webapp.identity.dto.request.ApiResponse;
-import com.webapp.identity.dto.request.RoleRequest;
-import com.webapp.identity.dto.response.RoleResponse;
-import com.webapp.identity.service.RoleService;
-
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-
 @RestController
 @RequestMapping("/roles")
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleController {
-	RoleService roleService;
-	
-	@PostMapping
-	ApiResponse<RoleResponse> create(@RequestBody RoleRequest request){
-		return ApiResponse.<RoleResponse>builder()
-				.result(roleService.create(request))
-				.build();
-	}
-	
-	@GetMapping
-	ApiResponse<List<RoleResponse>> getAll(){
-		return ApiResponse.<List<RoleResponse>>builder()
-				.result(roleService.getAll())
-				.build();
-	}
-	@DeleteMapping("/{role}")
-	ApiResponse<Void> delete(@PathVariable String role){
-		roleService.delete(role);
-		return ApiResponse.<Void>builder().build();
-	}
-	
+  RoleService roleService;
+
+  @PostMapping
+  ApiResponse<RoleResponse> create(@RequestBody RoleRequest request) {
+    return ApiResponse.<RoleResponse>builder().result(roleService.create(request)).build();
+  }
+
+  @GetMapping
+  ApiResponse<List<RoleResponse>> getAll() {
+    return ApiResponse.<List<RoleResponse>>builder().result(roleService.getAll()).build();
+  }
+
+  @DeleteMapping("/{role}")
+  ApiResponse<Void> delete(@PathVariable String role) {
+    roleService.delete(role);
+    return ApiResponse.<Void>builder().build();
+  }
 }

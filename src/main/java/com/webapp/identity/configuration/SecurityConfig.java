@@ -19,42 +19,51 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-	private final String[] PUBLIC_ENDPOINTS = { "/users", "/auth/log-in", "/auth/introspect", "/auth/logout" };
+  private final String[] PUBLIC_ENDPOINTS = {
+    "/users", "/auth/log-in", "/auth/introspect", "/auth/logout"
+  };
 
-	@Autowired
-	CustomJwtDecoder customJwtDecoder;
-	
-	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.authorizeHttpRequests(request -> request
-				.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-			.anyRequest().authenticated());
+  @Autowired CustomJwtDecoder customJwtDecoder;
 
-		httpSecurity.oauth2ResourceServer(oauth2 -> oauth2
-				.jwt(jwtConfigurer -> jwtConfigurer
-						.decoder(customJwtDecoder)
-						.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-				.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-				);
+  @Bean
+  SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity.authorizeHttpRequests(
+        request ->
+            request
+                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                .permitAll()
+                .anyRequest()
+                .authenticated());
 
-		httpSecurity.csrf(AbstractHttpConfigurer::disable);
+    httpSecurity.oauth2ResourceServer(
+        oauth2 ->
+            oauth2
+                .jwt(
+                    jwtConfigurer ->
+                        jwtConfigurer
+                            .decoder(customJwtDecoder)
+                            .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
-		return httpSecurity.build();
-	}
-	
-	@Bean
-	JwtAuthenticationConverter jwtAuthenticationConverter() {
-		JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-		jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
-		
-		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-		
-		return jwtAuthenticationConverter;
-	}
-	
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder(10);
-	}
+    httpSecurity.csrf(AbstractHttpConfigurer::disable);
+
+    return httpSecurity.build();
+  }
+
+  @Bean
+  JwtAuthenticationConverter jwtAuthenticationConverter() {
+    JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
+        new JwtGrantedAuthoritiesConverter();
+    jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+
+    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+    return jwtAuthenticationConverter;
+  }
+
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder(10);
+  }
 }
