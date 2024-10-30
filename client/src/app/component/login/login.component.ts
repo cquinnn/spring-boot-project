@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IntergrationService } from '../../services/intergration.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LoginRequest } from '../../models/login-request';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(private intergration: IntergrationService) { }
+  constructor(private intergration: IntergrationService, private router: Router) { }
 
   userForm : FormGroup = new FormGroup({
     username: new FormControl(''),
@@ -23,8 +24,7 @@ export class LoginComponent {
 
   doLogin() {
     const formValue = this.userForm.value;
-    // console.log(formValue.username)
-    // console.log(formValue.password)
+    
     if(formValue.username == '' || formValue.password == '') {
       alert('Empty Credentials');
       return;
@@ -35,7 +35,9 @@ export class LoginComponent {
 
     this.intergration.doLogin(this.request).subscribe({
       next:(res) => {
-        console.log("Received response:" + res.result?.token);
+        console.log("Login success");
+        localStorage.setItem('loginToken', res.result?.token);
+        this.router.navigateByUrl('home');
       }, error: (err) => {
         console.log("Error received response:" + err);
       }
