@@ -1,32 +1,24 @@
 package com.webapp.video.service;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.webapp.common.exception.AppException;
 import com.webapp.common.exception.ErrorCode;
+import com.webapp.video.dto.VideoResponse;
+import com.webapp.video.dto.VideoUploadRequest;
 import com.webapp.video.entity.Video;
+import com.webapp.video.mapper.VideoMapper;
 import com.webapp.video.repository.VideoRepository;
 
 import lombok.AccessLevel;
@@ -35,17 +27,18 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
-@Slf4j
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class VideoService {
     
+    final VideoMapper videoMapper;
     final VideoRepository videoRepository;
 
     @Value("${video.upload.directory}")
-    String uploadDirectory;
-    
+    private String staticUploadDirectory;
+
     public Mono<Resource> getVideoAsResource(String title) throws IOException{
     
         Video video = videoRepository.findByTitle(title)
@@ -60,35 +53,37 @@ public class VideoService {
         }
     }
 
-    // public Mono<Video> getVideoMetadata(String title) {
-    // return Mono.fromCallable(() -> {
+    // public ApiResponse<Video> getVideoMetadata(String title) {
+    // return ApiResponse<Video>.
     //     Video video = videoRepository.findByTitle(title)
     //                             .orElseThrow(() -> new AppException(ErrorCode.VIDEO_NOT_EXISTED));
         
     // });
     // }
     
-    public Video save(Video video, MultipartFile file) throws IllegalStateException, IOException {
+    public VideoResponse save(VideoUploadRequest request, MultipartFile file) throws IllegalStateException, IOException {
         String filename = file.getOriginalFilename();
         String contentType = file.getContentType();
-
-        String uniqueFileName = video.getId() + "_" + filename;
+        String videoId = UUID.randomUUID().toString();
+        String uniqueFileName = videoId + "_" + filename;
         
         // Create the directory if it doesn't exist
-        Path directoryPath = Paths.get(uploadDirectory);
+        Path directoryPath = Paths.get(staticUploadDirectory);
         if (!Files.exists(directoryPath)) {
             Files.createDirectories(directoryPath);
         }
         
         // Define the path to save the video
         Path filePath = directoryPath.resolve(uniqueFileName).normalize().toAbsolutePath();
-        
-        video.setContentType(contentType);
+        Video video = new Video();
+        video = videoMapper.toVideo(request);
+        video.setId(videoId);
         video.setFilePath(filePath.toString());
+        video.setContentType(contentType);
         try{
             Video savedVideo = videoRepository.save(video);
             file.transferTo(filePath.toFile()); // Save the file
-            return savedVideo; 
+            return videoMapper.toVideoResponse(savedVideo); 
         } catch(DataIntegrityViolationException e){
             throw new AppException(ErrorCode.VIDEO_TITLE_DUPLICATED);
         } catch(IOException e){
