@@ -16,7 +16,7 @@ MySQL: Relational database management system for storing application data.
 - Media Attachment: Enables users to create, read, update, and delete their media.
 - Blog Post Management: Enables users to create, read, update, and delete their blog posts.
 
-## Architecture -
+## Architecture
 The application follows a standard client-server architecture:
 - **Backend (Server)**: Developed using Java and Spring Boot.
 - **Database**: MySQL is used to store blog posts, user information, and other data.
