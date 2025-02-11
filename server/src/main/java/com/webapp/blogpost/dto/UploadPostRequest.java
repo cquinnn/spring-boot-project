@@ -1,4 +1,4 @@
-package com.webapp.auth.dto.request;
+package com.webapp.blogpost.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PermissionRequest {
-  String name;
-  String description;
+public class UploadPostRequest {
+    String title;
+    String content;
 }

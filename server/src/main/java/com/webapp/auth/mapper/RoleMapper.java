@@ -6,9 +6,12 @@ import com.webapp.auth.entity.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
+  RoleMapper INSTANCE = Mappers.getMapper(RoleMapper.class);
+
   @Mapping(target = "permissions", ignore = true)
   Role toRole(RoleRequest request);
 

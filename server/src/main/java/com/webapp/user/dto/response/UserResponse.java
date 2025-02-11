@@ -2,17 +2,13 @@ package com.webapp.user.dto.response;
 
 import com.webapp.auth.dto.response.RoleResponse;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
@@ -21,5 +17,5 @@ public class UserResponse {
   String firstName;
   String lastName;
   LocalDate dob;
-  Set<RoleResponse> roles;
+  List<RoleResponse> roles;
 }

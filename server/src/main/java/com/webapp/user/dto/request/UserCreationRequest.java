@@ -4,16 +4,11 @@ import com.webapp.user.validator.DobConstraint;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
@@ -28,6 +23,4 @@ public class UserCreationRequest {
 
   @DobConstraint(min = 12, message = "INVALID_DOB")
   LocalDate dob;
-
-  List<String> roles = List.of("USER");
 }

@@ -1,14 +1,14 @@
-package com.webapp.auth.dto.request;
+package com.webapp.media.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PermissionRequest {
-  String name;
-  String description;
+public class UploadMediaRequest {
+    String title;
+    String description;
 }

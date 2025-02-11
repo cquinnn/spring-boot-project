@@ -97,7 +97,6 @@ public class AuthenticationService {
     } catch (AppException e) {
       isValid = false;
     }
-    System.out.println(isValid);
     return IntrospectResponse.builder().valid(isValid).build();
   }
 
@@ -111,7 +110,7 @@ public class AuthenticationService {
   }
 
   private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
-    JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+	JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
     SignedJWT signedJWT = SignedJWT.parse(token);
     Date expireTime = signedJWT.getJWTClaimsSet().getExpirationTime();
     var verified = signedJWT.verify(verifier);

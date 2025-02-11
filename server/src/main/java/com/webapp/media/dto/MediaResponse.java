@@ -1,18 +1,14 @@
-package com.webapp.video.dto;
+package com.webapp.media.dto;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VideoResponse {
+public class MediaResponse {
     String id;
     String title;
     String description;

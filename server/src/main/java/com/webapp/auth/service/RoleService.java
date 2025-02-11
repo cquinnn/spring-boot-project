@@ -8,6 +8,8 @@ import com.webapp.auth.repository.PermissionRepository;
 import com.webapp.auth.repository.RoleRepository;
 import java.util.HashSet;
 import java.util.List;
+
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +25,7 @@ public class RoleService {
   RoleMapper roleMapper;
   PermissionRepository permissionRepo;
 
+  @Transactional
   public RoleResponse create(RoleRequest request) {
     var role = roleMapper.toRole(request);
     var permissions = permissionRepo.findAllById(request.getPermissions());
@@ -31,7 +34,8 @@ public class RoleService {
     return roleMapper.toRoleResponse(role);
   }
 
-  public RoleResponse updateRole(String role, RoleRequest request) {
+  @Transactional
+  public synchronized RoleResponse updateRole(String role, RoleRequest request) {
     Role role_update =
         roleRepo.findByName(role).orElseThrow(() -> new RuntimeException("Role not found"));
 

@@ -10,7 +10,9 @@ import com.webapp.user.dto.response.UserResponse;
 import com.webapp.user.entity.User;
 import com.webapp.user.mapper.UserMapper;
 import com.webapp.user.repository.UserRepository;
-import java.util.HashSet;
+
+import java.util.*;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,39 +37,36 @@ public class UserService {
   PasswordEncoder passwordEncoder;
   RoleRepository roleRepo;
 
+  @Transactional
   public UserResponse createUser(UserCreationRequest request) {
-    // if (userRepo.existsByUsername(request.getUsername()))
-    // 	throw new AppException(ErrorCode.USER_EXISTED);
+    if (userRepo.existsByUsername(request.getUsername()))
+     	throw new AppException(ErrorCode.USER_EXISTED);
 
     User user = userMapper.toUser(request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    HashSet<Role> roles = new HashSet<>();
-    request.getRoles().forEach(role -> roleRepo.findById(role).ifPresent(roles::add));
-    user.setRoles(new HashSet<>(roles));
+    Role role = roleRepo.findByName("USER").orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    user.setRoles(Collections.singletonList(role));
     try {
-      user = userRepo.save(user);
-
+      return userMapper.toUserResponse(userRepo.save(user));
     } catch (DataIntegrityViolationException exception) {
       throw new AppException(ErrorCode.USER_EXISTED);
     }
-    return userMapper.toUserResponse(user);
+
   }
 
-  public UserResponse updateUser(String userId, UserUpdateRequest request) {
-    User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+  @Transactional
+  public synchronized UserResponse updateUser(String userId, UserUpdateRequest request) {
+    User user = userRepo.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
     userMapper.updateUser(user, request);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
-    var roles = roleRepo.findAllById(request.getRoles());
-    user.setRoles(new HashSet<>(roles));
     return userMapper.toUserResponse(userRepo.save(user));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   public Page<UserResponse> getUsers(int pageNo, int pageSize) {
     Page<User> users = userRepo.findAll(PageRequest.of(pageNo, pageSize));
-    Page<UserResponse> usersResponses = users.map(userMapper::toUserResponse);
-    return usersResponses;
+      return users.map(userMapper::toUserResponse);
   }
 
   @PostAuthorize("returnObject.username == authentication.name")
@@ -75,7 +75,7 @@ public class UserService {
         userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
   }
 
-  public void deleteUser(String userId) {
+  public synchronized void deleteUser(String userId) {
     userRepo.deleteById(userId);
   }
 
