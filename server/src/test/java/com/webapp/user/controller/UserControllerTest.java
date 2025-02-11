@@ -2,9 +2,9 @@ package com.webapp.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.webapp.user.dto.request.UserCreationRequest;
-import com.webapp.user.dto.response.UserResponse;
-import com.webapp.user.service.UserService;
+import com.webapp.module.user.dto.request.UserCreationRequest;
+import com.webapp.module.user.dto.response.UserResponse;
+import com.webapp.module.user.service.UserService;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;

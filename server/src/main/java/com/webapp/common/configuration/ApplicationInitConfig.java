@@ -1,9 +1,9 @@
 package com.webapp.common.configuration;
 
-import com.webapp.auth.entity.Role;
-import com.webapp.auth.repository.RoleRepository;
-import com.webapp.user.entity.User;
-import com.webapp.user.repository.UserRepository;
+import com.webapp.model.Role;
+import com.webapp.module.auth.repository.RoleRepository;
+import com.webapp.module.user.entity.User;
+import com.webapp.module.user.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

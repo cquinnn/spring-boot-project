@@ -3,14 +3,16 @@ package com.webapp.user.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import com.webapp.auth.repository.RoleRepository;
-import com.webapp.user.dto.request.UserCreationRequest;
-import com.webapp.user.dto.response.UserResponse;
-import com.webapp.user.entity.User;
-import com.webapp.user.mapper.UserMapper;
-import com.webapp.user.repository.UserRepository;
+import com.webapp.module.auth.repository.RoleRepository;
+import com.webapp.module.user.dto.request.UserCreationRequest;
+import com.webapp.module.user.dto.response.UserResponse;
+import com.webapp.module.user.entity.User;
+import com.webapp.module.user.mapper.UserMapper;
+import com.webapp.module.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import com.webapp.module.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
