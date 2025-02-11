@@ -1,4 +1,4 @@
-# Blog App Web Application 
+# Blog Web 
 ## Introduction
 This project is a Blog App web application developed using Java, Spring Boot, JWT Authentication, and MySQL. It provides users with functionalities to create, read, update, and delete blog posts, as well as authentication and authorization features to secure the application.
 
