@@ -15,10 +15,11 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
-    INVALID_TYPE(1009, "The type of file is invalid", HttpStatus.BAD_REQUEST),
+    INVALID_MEDIA_TYPE(1009, "The type of file is invalid", HttpStatus.BAD_REQUEST),
     MEDIA_NOT_EXISTED(2005, "Media not existed", HttpStatus.NOT_FOUND),
     MEDIA_TITLE_DUPLICATED(2006, "Media title existed", HttpStatus.BAD_REQUEST),
-    MEDIA_STORAGE_FAILURE(2007, "Could not save the file", HttpStatus.INTERNAL_SERVER_ERROR);
+    FILE_STORAGE_FAILURE(2007, "Could not save the file", HttpStatus.INTERNAL_SERVER_ERROR),
+    POST_NOT_EXISTED(2005, "Post not existed", HttpStatus.NOT_FOUND);
 
     private final int code;
     private final String message;

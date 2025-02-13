@@ -1,9 +1,7 @@
 package com.webapp.model;
 
 import com.webapp.module.user.entity.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,13 +13,16 @@ import lombok.experimental.FieldDefaults;
 @Entity
 public class Comment {
     @Id
-    String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long Id;
 
     String content;
 
     @ManyToOne
-    User user;
+    @JoinColumn(name = "post_id")
+    Post post;
 
     @ManyToOne
-    Post post;
+    @JoinColumn(name = "user_id")
+    User user;
 }

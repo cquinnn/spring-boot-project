@@ -4,8 +4,8 @@ import com.webapp.common.dto.response.ApiResponse;
 import com.webapp.common.exception.AppException;
 import com.webapp.common.exception.ErrorCode;
 import com.webapp.module.media.dto.MediaResponse;
-import com.webapp.module.media.dto.UploadMediaRequest;
-import com.webapp.module.media.service.UploadMediaService;
+import com.webapp.module.media.dto.UploadMediaListRequest;
+import com.webapp.module.media.service.UploadMediaListService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,40 +17,41 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/media")
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UploadMediaController {
-    UploadMediaService uploadMediaService;
+public class UploadMediaListController {
+    UploadMediaListService uploadMediaListService;
 
     @PostMapping("/upload")
-    public ApiResponse<MediaResponse> uploadMedia(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("title") String title,
-            @RequestParam("description") String description
+    public ApiResponse<List<MediaResponse>> uploadMedia(
+            @RequestParam("mediaList") List<MultipartFile> mediaList,
+            @RequestParam("postId") Long postId
     ) throws IOException {
-        UploadMediaRequest request = new UploadMediaRequest(title, description);
-        MediaResponse savedMedia;
+        UploadMediaListRequest request = new UploadMediaListRequest(mediaList);
+        List<MediaResponse> savedMedia;
         try {
-            savedMedia = uploadMediaService.save(request, file);
+            savedMedia = uploadMediaListService.save(request, postId);
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.INVALID_TYPE);
+            throw new AppException(ErrorCode.INVALID_MEDIA_TYPE);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         if (savedMedia != null) {
-            return ApiResponse.<MediaResponse>builder()
-                    .message("Saved the photo.")
+            return ApiResponse.<List<MediaResponse>>builder()
+                    .message("Saved the media successfully.")
                     .result(savedMedia)
                     .build();
         } else {
-            return ApiResponse.<MediaResponse>builder()
-                    .message("Could not save the photo.")
+            return ApiResponse.<List<MediaResponse>>builder()
+                    .message(ErrorCode.FILE_STORAGE_FAILURE.getMessage())
                     .build();
         }
     }
+
 }

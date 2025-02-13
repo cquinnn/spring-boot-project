@@ -1,17 +1,11 @@
 package com.webapp.user.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 import com.webapp.module.auth.repository.RoleRepository;
 import com.webapp.module.user.dto.request.UserCreationRequest;
 import com.webapp.module.user.dto.response.UserResponse;
 import com.webapp.module.user.entity.User;
 import com.webapp.module.user.mapper.UserMapper;
 import com.webapp.module.user.repository.UserRepository;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
 import com.webapp.module.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,74 +16,83 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/test.properties")
 public class UserServiceTest {
 
-  @Autowired private UserService userService;
+    @Autowired
+    private UserService userService;
 
-  @MockBean private UserRepository userRepo;
-  @MockBean private RoleRepository roleRepo;
-  @MockBean private UserMapper userMapper;
-  private UserCreationRequest request;
-  private UserResponse userResponse;
-  private LocalDate dob;
-  private User user;
+    @MockBean
+    private UserRepository userRepo;
+    @MockBean
+    private RoleRepository roleRepo;
+    @MockBean
+    private UserMapper userMapper;
+    private UserCreationRequest request;
+    private UserResponse userResponse;
+    private LocalDate dob;
+    private User user;
 
-  @BeforeEach
-  void initData() {
-    dob = LocalDate.of(2001, 10, 10);
-    request =
-        UserCreationRequest.builder()
-            .username("test")
-            .firstName("Quynh")
-            .lastName("Vo")
-            .password("12345678")
-            .dob(dob)
-            .build();
+    @BeforeEach
+    void initData() {
+        dob = LocalDate.of(2001, 10, 10);
+        request =
+                UserCreationRequest.builder()
+                        .username("test")
+                        .firstName("Quynh")
+                        .lastName("Vo")
+                        .password("12345678")
+                        .dob(dob)
+                        .build();
 
-    userResponse =
-        UserResponse.builder()
-            .id("asb408cf23")
-            .username("test")
-            .firstName("Quynh")
-            .lastName("Vo")
-            .dob(dob)
-            .build();
+        userResponse =
+                UserResponse.builder()
+                        .id("asb408cf23")
+                        .username("test")
+                        .firstName("Quynh")
+                        .lastName("Vo")
+                        .dob(dob)
+                        .build();
 
-    user =
-        User.builder()
-            .id("asb408cf23")
-            .username("test")
-            .firstName("Quynh")
-            .lastName("Vo")
-            .password("12345678")
-            .dob(dob)
-            .build();
+        user =
+                User.builder()
+                        .id("asb408cf23")
+                        .username("test")
+                        .firstName("Quynh")
+                        .lastName("Vo")
+                        .password("12345678")
+                        .dob(dob)
+                        .build();
 
-    user =
-        User.builder()
-            .id("asb408cf23")
-            .username("test")
-            .firstName("Quynh")
-            .lastName("Vo")
-            .password("12345678")
-            .dob(dob)
-            .build();
-  }
+        user =
+                User.builder()
+                        .id("asb408cf23")
+                        .username("test")
+                        .firstName("Quynh")
+                        .lastName("Vo")
+                        .password("12345678")
+                        .dob(dob)
+                        .build();
+    }
 
-  @Test
-  void createValidUser_success() {
-    when(userRepo.existsByUsername("existingUsername")).thenReturn(false);
-    when(userRepo.save(user)).thenReturn(user);
-    when(roleRepo.findAllById(request.getRoles())).thenReturn(new ArrayList());
-    when(userMapper.toUser(request)).thenReturn(user);
-    when(userMapper.toUserResponse(user)).thenReturn(userResponse);
+    @Test
+    void createValidUser_success() {
+        when(userRepo.existsByUsername("existingUsername")).thenReturn(false);
+        when(userRepo.save(user)).thenReturn(user);
+//    when(roleRepo.findAllById(request.getRoles())).thenReturn(new ArrayList());
+        when(userMapper.toUser(request)).thenReturn(user);
+        when(userMapper.toUserResponse(user)).thenReturn(userResponse);
 
-    var response = userService.createUser(request);
+        var response = userService.createUser(request);
 
-    assertThat(response).isEqualTo(userResponse);
-  }
+        assertThat(response).isEqualTo(userResponse);
+    }
 }

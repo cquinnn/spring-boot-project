@@ -3,10 +3,9 @@ package com.webapp.module.media.service;
 import com.webapp.common.dto.response.ApiResponse;
 import com.webapp.common.exception.AppException;
 import com.webapp.common.exception.ErrorCode;
-import com.webapp.module.media.dto.DeleteMediaRequest;
 import com.webapp.model.Media;
+import com.webapp.module.media.dto.DeleteMediaRequest;
 import com.webapp.module.media.repository.MediaRepository;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,8 +30,7 @@ public class DeleteMediaService {
     @Value("${media.upload.directory}")
     String mediaDirectory;
 
-    @Transactional
-    public synchronized ApiResponse<Void> delete(DeleteMediaRequest request) throws IOException {
+    public ApiResponse<Void> delete(DeleteMediaRequest request) throws IOException {
         Media media = mediaRepository.findById(request.getId()).orElseThrow(() -> new AppException(ErrorCode.MEDIA_NOT_EXISTED));
 
         Path directoryPath = Paths.get(mediaDirectory);

@@ -39,7 +39,7 @@ public class ApplicationInitConfig {
         log.warn("Initializing application...");
         return args -> {
             if (userRepository.findByUsername("admin").isEmpty()) {
-                List roles = new ArrayList<>();
+                List<Role> roles = new ArrayList<>();
                 Role role = Role.builder().name("ADMIN").build();
                 Role role2 = Role.builder().name("USER").build();
                 roleRepository.save(role);

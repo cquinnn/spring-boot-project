@@ -1,14 +1,13 @@
-package com.webapp.module.media.dto;
+package com.webapp.module.blogpost.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UploadMediaRequest {
-    String title;
-    String description;
+public class GetPostRequest {
+    Long id;
 }

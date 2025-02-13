@@ -5,6 +5,8 @@ import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,7 +18,8 @@ public class Media {
     String id;
 
     String title;
-    String description;
     String filePath;
     String contentType;
+    LocalDateTime timestamp;
+    Long postId;
 }

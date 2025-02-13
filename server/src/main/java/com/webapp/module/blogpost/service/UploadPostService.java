@@ -1,25 +1,30 @@
 package com.webapp.module.blogpost.service;
 
+import com.webapp.model.Media;
+import com.webapp.model.Post;
 import com.webapp.module.blogpost.dto.PostResponse;
 import com.webapp.module.blogpost.dto.UploadPostRequest;
-import com.webapp.model.Post;
 import com.webapp.module.blogpost.mapper.PostMapper;
 import com.webapp.module.blogpost.repository.PostRepository;
+import com.webapp.module.media.dto.MediaResponse;
+import com.webapp.module.media.dto.UploadMediaListRequest;
+import com.webapp.module.media.mapper.MediaMapper;
+import com.webapp.module.media.service.UploadMediaListService;
 import com.webapp.module.user.dto.response.UserResponse;
 import com.webapp.module.user.entity.User;
 import com.webapp.module.user.mapper.UserMapper;
 import com.webapp.module.user.service.UserService;
-import jakarta.transaction.Transactional;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,23 +35,27 @@ public class UploadPostService {
     PostRepository postRepository;
     UserService userService;
     UserMapper userMapper;
+    UploadMediaListService uploadMediaListService;
+    MediaMapper mediaMapper;
 
     @Transactional
-    public synchronized PostResponse save(UploadPostRequest request) {
-        String id = UUID.randomUUID().toString();
+    public PostResponse save(UploadPostRequest request) throws IOException {
         Post post = postMapper.toPost(request);
-        post.setTimestamp(LocalDateTime.now());
-        var context = SecurityContextHolder.getContext();
-        String name = context.getAuthentication().getName();
-        UserResponse userResponse= userService.getMyInfo();
+        post.setCreatedAt(LocalDateTime.now());
+
+        UserResponse userResponse = userService.getMyInfo();
         User user = userMapper.toUser(userResponse);
         post.setAuthor(user);
+        List<MultipartFile> mediaFiles = request.getMediaList();
 
-        try {
-            Post savedPost = postRepository.save(post);
-            return postMapper.toPostResponse(savedPost);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Post savedPost = postRepository.save(post);
+        if (mediaFiles != null && !mediaFiles.isEmpty()) {
+            UploadMediaListRequest uploadMediaListRequest = new UploadMediaListRequest(mediaFiles);
+
+            List<MediaResponse> mediaResponses = uploadMediaListService.save(uploadMediaListRequest, savedPost.getId());
+            List<Media> mediaList = mediaMapper.toMediaList(mediaResponses);
+            savedPost.setMediaList(mediaList);
         }
+        return postMapper.toPostResponse(savedPost);
     }
 }
