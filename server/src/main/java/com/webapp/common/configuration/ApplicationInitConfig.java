@@ -23,9 +23,9 @@ import java.util.List;
 @Slf4j
 @Configuration
 public class ApplicationInitConfig {
-    @NonFinal
+
     static final String ADMIN_USER_NAME = "admin";
-    @NonFinal
+
     static final String ADMIN_PASSWORD = "admin";
     PasswordEncoder passwordEncoder;
 
