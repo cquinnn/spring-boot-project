@@ -3,13 +3,11 @@ package com.webapp.module.media.service;
 import com.webapp.model.Media;
 import com.webapp.module.media.dto.GetMediaListByPostIdRequest;
 import com.webapp.module.media.dto.GetMediaOutput;
-import com.webapp.module.media.mapper.MediaMapper;
 import com.webapp.module.media.repository.MediaRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,11 +21,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class GetMediaListByPostIdService {
-    final MediaMapper mediaMapper;
     final MediaRepository mediaRepository;
-
-    @Value("${media.upload.directory}")
-    String mediaUploadDirectory;
 
     public List<GetMediaOutput> getMediaList(GetMediaListByPostIdRequest request) throws IOException {
         List<Media> mediaList = mediaRepository.findAllByPostId(request.getPostId());

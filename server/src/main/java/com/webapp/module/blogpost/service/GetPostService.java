@@ -9,9 +9,7 @@ import com.webapp.module.blogpost.mapper.PostMapper;
 import com.webapp.module.blogpost.repository.PostRepository;
 import com.webapp.module.media.dto.GetMediaListByPostIdRequest;
 import com.webapp.module.media.dto.GetMediaOutput;
-import com.webapp.module.media.mapper.MediaMapper;
 import com.webapp.module.media.service.GetMediaListByPostIdService;
-import com.webapp.module.media.service.UploadMediaListService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,8 +26,6 @@ import java.util.List;
 public class GetPostService {
     PostMapper postMapper;
     PostRepository postRepository;
-    UploadMediaListService uploadMediaListService;
-    MediaMapper mediaMapper;
     GetMediaListByPostIdService getMediaListByPostIdService;
 
     public GetPostResponse get(GetPostRequest request) {
