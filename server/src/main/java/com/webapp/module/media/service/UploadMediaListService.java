@@ -78,6 +78,7 @@ public class UploadMediaListService {
 
             Media media = mediaMapper.toMedia(request);
             media.setId(id);
+            media.setFilename(originalFilename);
             media.setFilePath(filePath.toString());
             media.setContentType(contentType);
             media.setTimestamp(now());

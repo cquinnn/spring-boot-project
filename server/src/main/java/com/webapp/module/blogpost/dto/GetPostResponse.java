@@ -1,9 +1,9 @@
 package com.webapp.module.blogpost.dto;
 
+import com.webapp.module.media.dto.GetMediaOutput;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,5 +19,5 @@ public class GetPostResponse {
     String author;
     LocalDateTime createdAt;
     LocalDateTime lastUpdated;
-    List<File> fileList;
+    List<GetMediaOutput> mediaList;
 }

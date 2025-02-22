@@ -37,7 +37,7 @@ public class DeleteMediaService {
         if (!Files.exists(directoryPath)) {
             throw new NoSuchFileException("Directory not found: " + directoryPath);
         }
-        Path path = Path.of(media.getFilePath());
+        Path path = Path.of(media.getFilename());
         if (!Files.exists(path)) {
             throw new AppException(ErrorCode.MEDIA_NOT_EXISTED);
         }

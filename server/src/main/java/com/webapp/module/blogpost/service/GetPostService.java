@@ -7,9 +7,10 @@ import com.webapp.module.blogpost.dto.GetPostRequest;
 import com.webapp.module.blogpost.dto.GetPostResponse;
 import com.webapp.module.blogpost.mapper.PostMapper;
 import com.webapp.module.blogpost.repository.PostRepository;
-import com.webapp.module.media.dto.GetFileListByPostIdRequest;
+import com.webapp.module.media.dto.GetMediaListByPostIdRequest;
+import com.webapp.module.media.dto.GetMediaOutput;
 import com.webapp.module.media.mapper.MediaMapper;
-import com.webapp.module.media.service.GetFileListByPostIdService;
+import com.webapp.module.media.service.GetMediaListByPostIdService;
 import com.webapp.module.media.service.UploadMediaListService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -29,16 +30,21 @@ public class GetPostService {
     PostRepository postRepository;
     UploadMediaListService uploadMediaListService;
     MediaMapper mediaMapper;
-    GetFileListByPostIdService getFileListByPostIdService;
+    GetMediaListByPostIdService getMediaListByPostIdService;
 
     public GetPostResponse get(GetPostRequest request) {
         Post post = postRepository.findById(request.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXISTED));
-        GetFileListByPostIdRequest getFileListByPostIdRequest = new GetFileListByPostIdRequest(post.getId());
+        GetMediaListByPostIdRequest getMediaListByPostIdRequest = new GetMediaListByPostIdRequest(post.getId());
         // Get MultipartFile instead of File
-        List<File> files = getFileListByPostIdService.getFileList(getFileListByPostIdRequest);
-        GetPostResponse postResponse = postMapper.toGetPostResponse(post);
-        postResponse.setFileList(files);
-        return postResponse;
+        try {
+            List<GetMediaOutput> files = getMediaListByPostIdService.getMediaList(getMediaListByPostIdRequest);
+
+            GetPostResponse postResponse = postMapper.toGetPostResponse(post);
+            postResponse.setMediaList(files);
+            return postResponse;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

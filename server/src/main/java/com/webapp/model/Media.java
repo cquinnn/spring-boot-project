@@ -17,7 +17,7 @@ public class Media {
     @Id
     String id;
 
-    String title;
+    String filename;
     String filePath;
     String contentType;
     LocalDateTime timestamp;

@@ -1,6 +1,7 @@
 package com.webapp.module.media.dto;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -8,11 +9,13 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MediaResponse {
+public class GetMediaOutput {
     String id;
-    String contentType;
     String filename;
+    String contentType;
+    byte[] content;
     LocalDateTime timestamp;
 }
