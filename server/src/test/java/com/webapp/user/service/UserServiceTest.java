@@ -1,9 +1,8 @@
 package com.webapp.user.service;
 
-import com.webapp.module.auth.repository.RoleRepository;
+import com.webapp.model.User;
 import com.webapp.module.user.dto.request.UserCreationRequest;
 import com.webapp.module.user.dto.response.UserResponse;
-import com.webapp.module.user.entity.User;
 import com.webapp.module.user.mapper.UserMapper;
 import com.webapp.module.user.repository.UserRepository;
 import com.webapp.module.user.service.UserService;
@@ -32,8 +31,6 @@ public class UserServiceTest {
 
     @MockBean
     private UserRepository userRepo;
-    @MockBean
-    private RoleRepository roleRepo;
     @MockBean
     private UserMapper userMapper;
     private UserCreationRequest request;

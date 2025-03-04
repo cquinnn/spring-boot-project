@@ -1,6 +1,5 @@
 package com.webapp.model;
 
-import com.webapp.module.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

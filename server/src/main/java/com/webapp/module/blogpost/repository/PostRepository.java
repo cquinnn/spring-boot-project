@@ -1,7 +1,7 @@
 package com.webapp.module.blogpost.repository;
 
 import com.webapp.model.Post;
-import com.webapp.module.user.entity.User;
+import com.webapp.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

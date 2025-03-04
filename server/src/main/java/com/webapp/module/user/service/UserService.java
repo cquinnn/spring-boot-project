@@ -3,11 +3,10 @@ package com.webapp.module.user.service;
 import com.webapp.common.exception.AppException;
 import com.webapp.common.exception.ErrorCode;
 import com.webapp.model.Role;
-import com.webapp.module.auth.repository.RoleRepository;
+import com.webapp.model.User;
 import com.webapp.module.user.dto.request.UpdateUserRequest;
 import com.webapp.module.user.dto.request.UserCreationRequest;
 import com.webapp.module.user.dto.response.UserResponse;
-import com.webapp.module.user.entity.User;
 import com.webapp.module.user.mapper.UserMapper;
 import com.webapp.module.user.repository.UserRepository;
 import lombok.AccessLevel;
@@ -22,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
@@ -34,26 +32,21 @@ public class UserService {
     UserRepository userRepo;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
-    RoleRepository roleRepo;
 
-    @Transactional
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepo.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role role = roleRepo.findByName("USER").orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        user.setRoles(Collections.singletonList(role));
+        user.setRoles(Collections.singletonList(Role.USER));
         try {
             return userMapper.toUserResponse(userRepo.save(user));
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-
     }
 
-    @Transactional
     public synchronized UserResponse updateUser(String userId, UpdateUserRequest request) {
         User user = userRepo.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 

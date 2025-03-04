@@ -2,6 +2,7 @@ package com.webapp.module.blogpost.service;
 
 import com.webapp.model.Media;
 import com.webapp.model.Post;
+import com.webapp.model.User;
 import com.webapp.module.blogpost.dto.PostResponse;
 import com.webapp.module.blogpost.dto.UploadPostRequest;
 import com.webapp.module.blogpost.mapper.PostMapper;
@@ -11,7 +12,6 @@ import com.webapp.module.media.dto.UploadMediaListRequest;
 import com.webapp.module.media.mapper.MediaMapper;
 import com.webapp.module.media.service.UploadMediaListService;
 import com.webapp.module.user.dto.response.UserResponse;
-import com.webapp.module.user.entity.User;
 import com.webapp.module.user.mapper.UserMapper;
 import com.webapp.module.user.service.UserService;
 import lombok.AccessLevel;

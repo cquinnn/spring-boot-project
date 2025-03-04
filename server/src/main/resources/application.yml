@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: ${DBMS_CONNECTION}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DBMS_USERNAME}
+    password: ${DBMS_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GG_CLIENT_ID}
+            client-secret: ${GG_CLIENT_SECRET}
+            scope: profile, email
+
+jwt:
+  signedKey: ${JWT_SIGNED_KEY}
+
+media:
+  upload:
+    directory: src/main/resources/static/media
+

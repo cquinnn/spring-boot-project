@@ -34,24 +34,4 @@ public class GetMediaListByPostIdService {
         }
         return mediaOutputs;
     }
-//
-//    private File getFileFromMedia(Media media) {
-//        String filePath = media.getFilePath();
-//
-//        File file = new File(filePath);
-//
-//        if (file.exists() && file.isFile()) {
-//            return file;
-//        } else {
-//            throw new RuntimeException("File does not exist at path: " + filePath);
-//        }
-//    }
-//
-//    private List<File> convertMediaListToFiles(List<Media> mediaList) throws IOException {
-//        List<File> files = new ArrayList<>();
-//        for (Media media : mediaList) {
-//            files.add(getFileFromMedia(media));  // Gọi hàm chuyển đổi
-//        }
-//        return files;
-//    }
 }

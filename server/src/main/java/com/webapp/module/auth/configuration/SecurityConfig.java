@@ -20,52 +20,51 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-  private final String[] PUBLIC_ENDPOINTS = {
-    "/users", "/auth/log-in", "/auth/introspect", "/auth/logout"
-  };
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/users", "/auth/**"
+    };
 
-  @Autowired CustomJwtDecoder customJwtDecoder;
+    @Autowired
+    CustomJwtDecoder customJwtDecoder;
 
-  @Bean
-  SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-    httpSecurity.authorizeHttpRequests(
-        request ->
-            request
-                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-                .permitAll()
-                .requestMatchers(HttpMethod.GET, "/video/**").permitAll()
-                .anyRequest()
-                .authenticated());
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.authorizeHttpRequests(
+                        request ->
+                                request
+                                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/video/**").permitAll()
+                                        .anyRequest()
+                                        .authenticated())
+                .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/auth/google", true)
+                ).oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwtConfigurer -> jwtConfigurer
+                                .decoder(customJwtDecoder)
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults());
 
-    httpSecurity.oauth2ResourceServer(
-        oauth2 ->
-            oauth2
-                .jwt(
-                    jwtConfigurer ->
-                        jwtConfigurer
-                            .decoder(customJwtDecoder)
-                            .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
+        return httpSecurity.build();
+    }
 
-    httpSecurity.csrf(AbstractHttpConfigurer::disable);
-    httpSecurity.cors(Customizer.withDefaults());
-    return httpSecurity.build();
-  }
+    @Bean
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
+                new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
-  @Bean
-  JwtAuthenticationConverter jwtAuthenticationConverter() {
-    JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
-        new JwtGrantedAuthoritiesConverter();
-    jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
-    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }
 
-    return jwtAuthenticationConverter;
-  }
-
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(10);
-  }
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
+    }
 }
